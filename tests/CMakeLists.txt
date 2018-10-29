@@ -32,4 +32,4 @@ function(add_target_test target test_source)
     add_test(${target} ${target})
 endfunction(add_target_test)
 
-add_target_test(simple simple_tst.cpp ${src}/Helpers.cpp)
+add_target_test(simple split_file_tst.cpp ${src}/Helpers.h)

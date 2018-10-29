@@ -7,12 +7,12 @@
 
 #include <unordered_map>
 
-template<typename Key, typename Value>
+template<class Key, class Value, class Container = std::unordered_map<Key,Value>>
 class IMap
 {
 public:
     void add_value(const Value&);
-    std::unordered_map<Key,Value> get_result();
+    Container get_result();
 };
 
 
