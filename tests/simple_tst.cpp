@@ -8,7 +8,6 @@
 #include <boost/mpl/assert.hpp>
 
 #include <fstream>
-#include <iostream>
 
 #include "Helpers.h"
 
@@ -17,34 +16,43 @@ constexpr auto empty_file = TEST_EXAMPLES_DIR "/empty_file.txt";
 
 BOOST_AUTO_TEST_SUITE(split_file_test)
 
-std::ios::streamoff simple_file_size = []() {
-    std::ifstream file(simple_file, std::ios_base::binary | std::ios_base::ate);
-    std::ios::streamoff file_size = file.tellg();
-    assert(file_size == 39);
-    return file_size;
-}();
-
-
 BOOST_AUTO_TEST_CASE(incorrect_file)
 {
-    BOOST_CHECK_THROW(split_file("incorrect_file_name",1),std::logic_error);
-    BOOST_CHECK_THROW(split_file(empty_file,0),std::logic_error);
+    std::ifstream file(simple_file, std::ios_base::binary);
+    file.close();
+    BOOST_CHECK_THROW(split_file(std::move(file),1),std::logic_error);
+    BOOST_CHECK_THROW(split_file(std::ifstream (empty_file, std::ios_base::binary),1),std::logic_error);
+    BOOST_CHECK_THROW(split_file(std::stringstream(),1),std::logic_error);
 }
 
 BOOST_AUTO_TEST_CASE(incorrect_partition_count)
 {
-    BOOST_CHECK_THROW(split_file(simple_file,0),std::logic_error);
-    BOOST_CHECK_THROW(split_file(simple_file,std::numeric_limits<unsigned int>::max()),std::logic_error);
-    BOOST_CHECK_THROW(split_file(simple_file, simple_file_size + 1),std::logic_error);
+    BOOST_CHECK_THROW(split_file(std::stringstream("context"),0),std::logic_error);
+    BOOST_CHECK_THROW(split_file(std::stringstream("context"),
+            std::numeric_limits<uint>::max()),std::logic_error);
+    BOOST_CHECK_THROW(split_file(std::stringstream("1234"), 5),std::logic_error);
 }
 
 BOOST_AUTO_TEST_CASE(get_partitions)
 {
     uint partition_count = 2;
-    auto partitions = split_file(simple_file,partition_count);
+    std::string context = "123\n"
+                          "456\n"
+                          "789\n"
+                          "012\n"
+                          "345\n"
+                          "678\n"
+                          "901\n"
+                          "234\n"
+                          "567\n"
+                          "890\n";
+
+    std::stringstream stream(context);
+
+    auto partitions = split_file(std::move(stream),partition_count);
     BOOST_REQUIRE_EQUAL(partitions.size(),partition_count);
     BOOST_CHECK_EQUAL(partitions[0],20);
-    BOOST_CHECK_EQUAL(partitions[1],simple_file_size);
+    BOOST_CHECK_EQUAL(partitions[1],context.size());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

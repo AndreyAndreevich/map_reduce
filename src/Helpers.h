@@ -5,10 +5,10 @@
 #ifndef MAP_REDUCE_HELPERS_H
 #define MAP_REDUCE_HELPERS_H
 
-#include <ios>
+#include <istream>
 #include <vector>
 
 std::vector<std::ios::streamoff>
-        split_file(const char* filename, const unsigned int partitions_count);
+        split_file(std::istream&& in, const unsigned int partitions_count);
 
 #endif //MAP_REDUCE_HELPERS_H
