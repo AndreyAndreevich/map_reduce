@@ -22,13 +22,21 @@ public:
     using size_type = size_t;
 
     Node() = default;
+
     Node(value_type value) {
         if (value.size()) {
             _value_list.push_back(std::move(value));
+            _max_depth = 1;
         }
     }
 
-    depth_type add_value(value_type value) {
+    Node(std::initializer_list<value_type> values) {
+        for (auto & value : values) {
+            push(value);
+        }
+    }
+
+    depth_type push(value_type value) {
         if (value.empty()) {
             return 0;
         }
@@ -38,7 +46,7 @@ public:
 
         auto add_to_map = [&depth,first_element,this] (auto && value, auto & map_iter) {
             value.pop_front();
-            depth += map_iter->second.add_value(std::move(value));
+            depth += map_iter->second.push(std::move(value));
         };
 
         if (map_iter != _node_map.end()) {
@@ -47,7 +55,7 @@ public:
             auto list_iter = std::find_if(
                     _value_list.begin(),
                     _value_list.end(),
-                    [first_element] (auto element) {
+                    [first_element] (const auto & element) {
                         return element.front() == first_element;
                     });
             if (list_iter != _value_list.end()) {
@@ -63,6 +71,7 @@ public:
             }
         }
 
+        this->check_and_change_depth(depth);
         return depth;
     }
 
@@ -70,9 +79,9 @@ public:
         value_list_type result = _value_list;
         for (const auto& node : _node_map) {
             auto value_list = node.second.get_all_values();
-            for (auto value : value_list) {
+            for (auto & value : value_list) {
                 value.push_front(node.first);
-                result.push_back(value);
+                result.push_back(std::move(value));
             }
         }
         return result;
@@ -80,15 +89,34 @@ public:
 
     size_type size() const {
         size_type size = _value_list.size();
-        for (const auto& node : _node_map) {
+        for (const auto & node : _node_map) {
             size += node.second.size();
         }
         return size;
     }
 
+    depth_type max_depth() const {
+        return _max_depth;
+    }
+
+    void merge(const Node & other_node) {
+        auto other_value_list = other_node.get_all_values();
+        for (auto & value : other_value_list) {
+            this->push(value);
+        }
+    }
+
+private:
+    void check_and_change_depth(const depth_type & depth) {
+        if (depth > _max_depth) {
+            _max_depth = depth;
+        }
+    }
+
 private:
     value_list_type _value_list;
     node_map_type _node_map;
+    depth_type _max_depth = 0;
 };
 
 #endif //MAP_REDUCE_NODE_H
