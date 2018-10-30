@@ -9,9 +9,9 @@
 
 #include "Map.h"
 
-BOOST_AUTO_TEST_SUITE(Maper)
+BOOST_AUTO_TEST_SUITE(Container_test)
 
-BOOST_AUTO_TEST_CASE(simple)
+BOOST_AUTO_TEST_CASE(add_value)
 {
     std::string context = "a\n"
                           "b\n"
@@ -28,3 +28,4 @@ BOOST_AUTO_TEST_CASE(simple)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+

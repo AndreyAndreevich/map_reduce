@@ -4,11 +4,11 @@ set(TARGET_NAME yamr)
 
 find_package(Boost COMPONENTS program_options filesystem REQUIRED)
 
-set(HEADERS
+set(SOURCES
     Helpers.h
     )
 
-add_executable(${TARGET_NAME} main.cpp ${HEADERS})
+add_executable(${TARGET_NAME} main.cpp ${SOURCES})
 
 set_target_properties(${TARGET_NAME} PROPERTIES
     COMPILE_DEFINITIONS BOOST_FILESYSTEM_NO_DEPRECATED
