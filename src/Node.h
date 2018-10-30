@@ -22,13 +22,13 @@ public:
     using size_type = size_t;
 
     Node() = default;
-    Node(const value_type& value) {
+    Node(value_type value) {
         if (value.size()) {
-            _value_list.push_back(value);
+            _value_list.push_back(std::move(value));
         }
     }
 
-    depth_type add_value(value_type&& value) {
+    depth_type add_value(value_type value) {
         if (value.empty()) {
             return 0;
         }
@@ -36,7 +36,7 @@ public:
         auto first_element = value.front();
         auto map_iter = _node_map.find(first_element);
 
-        auto add_to_map = [&depth,first_element,this] (auto value, auto map_iter) {
+        auto add_to_map = [&depth,first_element,this] (auto && value, auto & map_iter) {
             value.pop_front();
             depth += map_iter->second.add_value(std::move(value));
         };
@@ -59,16 +59,11 @@ public:
                     add_to_map(value, map_iter);
                 }
             } else {
-                _value_list.push_back(value);
+                _value_list.push_back(std::move(value));
             }
         }
 
         return depth;
-    }
-
-    depth_type add_value(const value_type& value) {
-        auto copy = value;
-        return add_value(std::move(copy));
     }
 
     value_list_type get_all_values() const {
