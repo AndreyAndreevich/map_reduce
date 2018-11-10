@@ -5,14 +5,14 @@
 #ifndef MAP_REDUCE_IREDUCE_H
 #define MAP_REDUCE_IREDUCE_H
 
-template<class container, class result>
+template<class value, class result>
 class IReduce
 {
 public:
-    using container_type = container;
+    using value_type = value;
     using result_type = result;
 
-    virtual void add_partition(container_type && partition) = 0;
+    virtual void push(value_type && value_) = 0;
     virtual result_type process() = 0;
 };
 

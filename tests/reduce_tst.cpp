@@ -17,16 +17,19 @@ BOOST_AUTO_TEST_CASE(process)
 
     BOOST_CHECK_EQUAL(reduce.process(),0);
 
-    std::map<char,Node<char>> first_map;
-    first_map.emplace('a',Node<char>{{'a','b','c'},{'a','b','d'},{'a','c'}});
-    first_map.emplace('b',Node<char>{{'b','b','c'},{'b','b','d'},{'b','c'}});
+    reduce.push("abc");
+    reduce.push("abd");
+    reduce.push("ac");
+    reduce.push("bbc");
+    reduce.push("bbd");
+    reduce.push("bc");
+    reduce.push("abs");
+    reduce.push("abcl");
+    reduce.push("ac");
+    reduce.push("cbc");
+    reduce.push("cbd");
+    reduce.push("cc");
 
-    std::map<char,Node<char>> second_map;
-    second_map.emplace('a',Node<char>{{'a','b','s'},{'a','b','c','l'},{'a','c'}});
-    second_map.emplace('c',Node<char>{{'c','b','c'},{'c','b','d'},{'c','c'}});
-
-    reduce.add_partition(std::move(first_map));
-    reduce.add_partition(std::move(second_map));
     BOOST_CHECK_EQUAL(reduce.process(),4);
 }
 
