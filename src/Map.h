@@ -11,11 +11,11 @@
 #include <string>
 #include <map>
 
-class Map : public IMap<std::string,std::map<char,Node<char>>>
+class Map final : public IMap<std::string,std::map<char,Node<char>>>
 {
     using node = Node<char>;
 public:
-    void push(const value_type & value_) override {
+    void push(const value_type & value_) final {
         if (value_.empty()) {
             return;
         }
@@ -33,7 +33,7 @@ public:
         }
     }
 
-    partitions_type split(const size_type & size_) override {
+    partitions_type split(const size_type & size_) final {
         constexpr node::key_type min = std::numeric_limits<node::key_type>::min();
         constexpr node::key_type max = std::numeric_limits<node::key_type>::max();
         constexpr auto range = max - min;

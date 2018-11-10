@@ -32,7 +32,7 @@ std::vector<std::ios::streamoff> split_file(std::istream&& in, const uint partit
     positions.reserve(partitions_count);
     for (uint i = 0; i < partitions_count - 1; i++) {
         auto position = (i + 1) * partition_size;
-        in.seekg(position);
+        in.seekg(position - 1);
         std::string buf;
         std::getline(in,buf);
         std::ios::streamoff pos = in.tellg();

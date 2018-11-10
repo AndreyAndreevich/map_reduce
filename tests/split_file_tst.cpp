@@ -47,6 +47,8 @@ BOOST_AUTO_TEST_CASE(get_partitions)
                           "567\n"
                           "890\n";
 
+    BOOST_REQUIRE_EQUAL(context.size(),40);
+
     std::stringstream stream(context);
 
     auto partitions = split_file(std::move(stream),partition_count);
