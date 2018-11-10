@@ -81,35 +81,8 @@ public:
         return depth;
     }
 
-    value_list_type get_all_values() const {
-        value_list_type result = _value_list;
-        for (const auto& node : _node_map) {
-            auto value_list = node.second.get_all_values();
-            for (auto & value : value_list) {
-                value.push_front(node.first);
-                result.push_back(std::move(value));
-            }
-        }
-        return result;
-    }
-
-    size_type size() const {
-        size_type size = _value_list.size();
-        for (const auto & node : _node_map) {
-            size += node.second.size();
-        }
-        return size;
-    }
-
     depth_type max_depth() const {
         return _max_depth;
-    }
-
-    void merge(const Node & other_node) {
-        auto other_value_list = other_node.get_all_values();
-        for (auto && value : other_value_list) {
-            this->push(std::move(value));
-        }
     }
 
 private:
