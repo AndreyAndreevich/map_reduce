@@ -11,31 +11,19 @@
 #include <string>
 #include <map>
 
-class Map final : public IMap<std::string,std::map<char,Node<char>>>
+class Map final : public IMap<std::string,std::multimap<char,std::string>>
 {
-    using node = Node<char>;
 public:
-    void push(const value_type & value_) final {
+    void push(value_type && value_) final {
         if (value_.empty()) {
             return;
         }
-        std::deque<char> deque;
-        for (auto element : value_) {
-            deque.push_back(element);
-        }
-
-        auto index = deque.front();
-        auto iter = _container.find(index);
-        if (iter != _container.end()) {
-            iter->second.push(std::move(deque));
-        } else {
-            _container.insert({index,node(std::move(deque))});
-        }
+        _container.emplace(value_.at(0),std::move(value_));
     }
 
     partitions_type split(const size_type & size_) final {
-        constexpr node::key_type min = std::numeric_limits<node::key_type>::min();
-        constexpr node::key_type max = std::numeric_limits<node::key_type>::max();
+        constexpr container_type::key_type min = std::numeric_limits<container_type::key_type>::min();
+        constexpr container_type::key_type max = std::numeric_limits<container_type::key_type>::max();
         constexpr auto range = max - min;
         if (size_ <= 0 || size_ > range) {
             throw std::logic_error("Numbers of partitions are incorrect");
@@ -50,7 +38,7 @@ public:
             partitions.push_back(std::move(partition));
         };
 
-        auto part = static_cast<node::key_type>(range / size_);
+        auto part = static_cast<container_type::key_type>(range / size_);
 
         for (auto i = 0; i < size_ - 1; i++) {
             set_partition(

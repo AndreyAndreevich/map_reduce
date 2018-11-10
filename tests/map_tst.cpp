@@ -74,22 +74,8 @@ BOOST_AUTO_TEST_CASE(correct_split)
 
     auto partitions = map.split(2);
     BOOST_REQUIRE_EQUAL(partitions.size(),2);
-    BOOST_CHECK_EQUAL(partitions.at(0).size(),3);
-    BOOST_CHECK_EQUAL(partitions.at(1).size(),3);
-
-    auto partition_size = [] (const auto & partition) {
-        return std::accumulate(
-                partition.cbegin(),
-                partition.cend(),
-                0,
-                [] (auto sum, const auto & el) {
-                    return sum + el.second.size();
-                });
-    };
-
-    BOOST_CHECK_EQUAL(partition_size(partitions.at(0)),4);
-    BOOST_CHECK_EQUAL(partition_size(partitions.at(1)),4);
-
+    BOOST_CHECK_EQUAL(partitions.at(0).size(),4);
+    BOOST_CHECK_EQUAL(partitions.at(1).size(),4);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

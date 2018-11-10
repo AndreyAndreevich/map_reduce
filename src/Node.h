@@ -32,8 +32,8 @@ public:
     }
 
     Node(std::initializer_list<value_type> && values) {
-        for (auto & value : values) {
-            push(value);
+        for (auto && value : values) {
+            push(std::move(value));
         }
     }
 
