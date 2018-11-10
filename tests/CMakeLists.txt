@@ -34,5 +34,4 @@ endfunction(add_target_test)
 
 add_target_test(split_tst split_file_tst.cpp ${src}/Helpers.h)
 add_target_test(node_tst node_tst.cpp ${src}/Node.h)
-add_target_test(containter_tst map_tst.cpp ${src}/Container.h)
 add_target_test(map_tst map_tst.cpp ${src}/Map.h)

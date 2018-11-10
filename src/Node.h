@@ -23,20 +23,26 @@ public:
 
     Node() = default;
 
-    Node(value_type value) {
+    template<class VALUE_TYPE = value_type>
+    Node(VALUE_TYPE && value) {
         if (value.size()) {
-            _value_list.push_back(std::move(value));
+            _value_list.push_back(std::forward<VALUE_TYPE>(value));
             _max_depth = 1;
         }
     }
 
-    Node(std::initializer_list<value_type> values) {
+    Node(std::initializer_list<value_type> && values) {
         for (auto & value : values) {
             push(value);
         }
     }
 
-    depth_type push(value_type value) {
+    depth_type push(const value_type & value) {
+        auto copy = value;
+        return this->push(std::move(copy));
+    }
+
+    depth_type push(value_type && value) {
         if (value.empty()) {
             return 0;
         }
@@ -63,7 +69,7 @@ public:
                     auto found_value = *list_iter;
                     _value_list.erase(list_iter);
                     found_value.pop_front();
-                    map_iter = _node_map.insert({first_element, Node(found_value)}).first;
+                    map_iter = _node_map.insert({first_element, Node(std::move(found_value))}).first;
                     add_to_map(value, map_iter);
                 }
             } else {

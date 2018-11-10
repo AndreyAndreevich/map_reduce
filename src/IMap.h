@@ -5,18 +5,19 @@
 #ifndef MAP_REDUCE_IMAP_H
 #define MAP_REDUCE_IMAP_H
 
-#include <unordered_map>
+#include <vector>
 
-template<class key, class value, class container = std::unordered_map<key,value>>
+template<class value, class container>
 class IMap
 {
 public:
-    using key_type = key;
     using value_type = value;
     using container_type = container;
+    using size_type = size_t;
+    using partitions_type = std::vector<container_type>;
 
-    virtual void add_value(const value_type&) = 0;
-    virtual container_type get_result() = 0;
+    virtual void push(const value_type & value_) = 0;
+    virtual partitions_type split(const size_type & size_) = 0;
     virtual ~IMap() = default;
 };
 

@@ -9,8 +9,6 @@
 
 #include "Node.h"
 
-#include <iostream>
-
 BOOST_AUTO_TEST_SUITE(Node_test)
 
 BOOST_AUTO_TEST_CASE(push)
@@ -65,6 +63,9 @@ BOOST_AUTO_TEST_CASE(push)
 
 BOOST_AUTO_TEST_CASE(merge)
 {
+    Node<int>::value_type value {1,2,3,4};
+
+    Node<int> a(value);
     Node<int> node1 {{1,2,3},{1,3,4},{1,3,5,6,7},{1,2,3,4}};
     Node<int> node2 {{1,2,3},{1,2,3,4,5},{7,8,9}};
     BOOST_CHECK_EQUAL(node1.size(),3);
