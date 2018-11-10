@@ -107,8 +107,8 @@ public:
 
     void merge(const Node & other_node) {
         auto other_value_list = other_node.get_all_values();
-        for (auto & value : other_value_list) {
-            this->push(value);
+        for (auto && value : other_value_list) {
+            this->push(std::move(value));
         }
     }
 

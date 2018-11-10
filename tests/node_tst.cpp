@@ -78,4 +78,18 @@ BOOST_AUTO_TEST_CASE(merge)
     BOOST_CHECK_EQUAL(node1.max_depth(),5);
 }
 
+BOOST_AUTO_TEST_CASE(move) {
+    Node<int> node1 {{1,2,3},{1,3,4},{1,3,5,6,7},{1,2,3,4}};
+    BOOST_REQUIRE_EQUAL(node1.size(),3);
+
+    Node<int> node2(std::move(node1));
+    BOOST_REQUIRE_EQUAL(node2.size(),3);
+    BOOST_REQUIRE_EQUAL(node1.size(),0);
+
+    Node<int> node3;
+    node3 = std::move(node2);
+    BOOST_REQUIRE_EQUAL(node3.size(),3);
+    BOOST_REQUIRE_EQUAL(node2.size(),0);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
