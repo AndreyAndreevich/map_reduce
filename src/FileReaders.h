@@ -8,6 +8,7 @@
 #include <istream>
 #include <vector>
 #include <exception>
+#include "IMap.h"
 
 std::vector<std::ios::streamoff> split_file(std::istream&& in, const uint partitions_count) {
     std::vector<std::ios::streamoff> positions;
@@ -42,5 +43,28 @@ std::vector<std::ios::streamoff> split_file(std::istream&& in, const uint partit
 
     return positions;
 }
+
+template<class T, class U>
+void read_partition(IMap<T,U> & map, std::istream&& in, std::ios::streamoff start_pos,  std::ios::streamoff end_pos) {
+    in.seekg(start_pos);
+    if (start_pos < 0 || end_pos < 0) {
+        throw std::logic_error("Incorrection positions");
+    }
+    if (start_pos >= end_pos) {
+        throw std::logic_error("Start position >= end position");
+    }
+    in.seekg(start_pos);
+    T buffer;
+    std::ios::streamoff pos;
+    do {
+        in >> buffer;
+        pos = in.tellg();
+        if (pos == -1) {
+            throw std::runtime_error("Read file error");
+        }
+        map.push(std::move(buffer));
+    } while(pos < end_pos);
+ }
+
 
 #endif //MAP_REDUCE_HELPERS_H

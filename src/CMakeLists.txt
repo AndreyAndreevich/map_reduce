@@ -5,7 +5,7 @@ set(TARGET_NAME yamr)
 find_package(Boost COMPONENTS program_options filesystem REQUIRED)
 
 set(SOURCES
-    Helpers.h
+        FileReaders.h
     )
 
 add_executable(${TARGET_NAME} main.cpp ${SOURCES})
