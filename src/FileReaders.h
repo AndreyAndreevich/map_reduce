@@ -44,8 +44,8 @@ std::vector<std::ios::streamoff> split_file(std::istream&& in, const uint partit
     return positions;
 }
 
-template<class T, class U>
-void read_partition(IMap<T,U> & map, std::istream&& in, std::ios::streamoff start_pos,  std::ios::streamoff end_pos) {
+template<class T>
+void read_partition(IMap<std::string,T> & map, std::istream&& in, std::ios::streamoff start_pos,  std::ios::streamoff end_pos) {
     in.seekg(start_pos);
     if (start_pos < 0 || end_pos < 0) {
         throw std::logic_error("Incorrection positions");
@@ -54,10 +54,10 @@ void read_partition(IMap<T,U> & map, std::istream&& in, std::ios::streamoff star
         throw std::logic_error("Start position >= end position");
     }
     in.seekg(start_pos);
-    T buffer;
+    std::string buffer;
     std::ios::streamoff pos;
     do {
-        in >> buffer;
+        std::getline(in,buffer);
         pos = in.tellg();
         if (pos == -1) {
             throw std::runtime_error("Read file error");

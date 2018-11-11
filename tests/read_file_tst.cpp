@@ -17,7 +17,7 @@ constexpr auto empty_file = TEST_EXAMPLES_DIR "/empty_file.txt";
 
 const std::string context = "123\n"
                             "456\n"
-                            "789\n"
+                            "7 9\n"
                             "012\n"
                             "345\n"
                             "678\n"
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(correct_read)
     map._vector.clear();
     read_partition(map,std::stringstream(context),8,11);
     BOOST_CHECK_EQUAL(map._vector.size(),1);
-    BOOST_CHECK_EQUAL(map._vector.at(0), "789");
+    BOOST_CHECK_EQUAL(map._vector.at(0), "7 9");
 }
 
 
