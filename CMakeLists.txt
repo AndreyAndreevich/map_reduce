@@ -8,6 +8,10 @@ endif()
 
 set(CMAKE_CXX_STANDARD 14)
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+set(CMAKE_SKIP_RPATH OFF)
+
 add_subdirectory(src)
 
 enable_testing()
