@@ -10,8 +10,9 @@
 #include <exception>
 #include "IMap.h"
 
-std::vector<std::ios::streamoff> split_file(std::istream&& in, const uint partitions_count) {
-    std::vector<std::ios::streamoff> positions;
+std::vector<std::pair<std::ios::streamoff,std::ios::streamoff>>
+split_file(std::istream&& in, const uint partitions_count) {
+    std::vector<std::pair<std::ios::streamoff,std::ios::streamoff>> positions;
 
     in.seekg(0, std::ios::end);
     std::ios::streamoff file_size = in.tellg();
@@ -31,15 +32,16 @@ std::vector<std::ios::streamoff> split_file(std::istream&& in, const uint partit
     assert(partition_size > 0);
 
     positions.reserve(partitions_count);
+    auto current_pos = std::pair<std::ios::streamoff,std::ios::streamoff>(-1,-1);
     for (uint i = 0; i < partitions_count - 1; i++) {
-        auto position = (i + 1) * partition_size;
-        in.seekg(position - 1);
+        current_pos.first = current_pos.second + 1;
+        in.seekg((i + 1) * partition_size - 1);
         std::string buf;
         std::getline(in,buf);
-        std::ios::streamoff pos = in.tellg();
-        positions.push_back(pos);
+        current_pos.second =  in.tellg() - static_cast<std::ios::streamoff>(1);
+        positions.push_back(current_pos);
     }
-    positions.push_back(file_size);
+    positions.emplace_back(current_pos.second + 1, file_size - 1);
 
     return positions;
 }
@@ -55,15 +57,13 @@ void read_partition(IMap<std::string,T> & map, std::istream&& in, std::ios::stre
     }
     in.seekg(start_pos);
     std::string buffer;
-    std::ios::streamoff pos;
+    std::ios::streamoff pos = 0;
     do {
         std::getline(in,buffer);
+        auto old_pos = pos;
         pos = in.tellg();
-        if (pos == -1) {
-            throw std::runtime_error("Read file error");
-        }
         map.push(std::move(buffer));
-    } while(pos < end_pos);
+    } while(pos < end_pos && pos != -1);
  }
 
 
