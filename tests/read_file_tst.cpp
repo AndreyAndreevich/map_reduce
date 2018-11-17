@@ -102,5 +102,4 @@ BOOST_AUTO_TEST_CASE(correct_read)
     BOOST_CHECK_EQUAL(map._vector.at(0), "7 9");
 }
 
-
 BOOST_AUTO_TEST_SUITE_END()
